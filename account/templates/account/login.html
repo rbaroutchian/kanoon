@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+
+{% block page_title %}
+
+{% endblock %}
+
+
+{% block page_content %}
+            <div class="auth-container">
+                <div class="auth-box">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" data-tab="login" onclick="showAuthTab('login')">ورود به حساب</div>
+{#                        <div class="auth-tab" data-tab="register" onclick="showAuthTab('register')">ثبت‌نام کاربر جدید</div>#}
+                    </div>
+
+                    <!-- فرم ورود -->
+                    <form method="post" id="loginForm" class="auth-form active">
+                          {% if error_message %}
+                      <div id="errorBox" style="
+                          position: fixed;
+                          top: 50%;
+                          left: 50%;
+                          transform: translate(-50%, -50%);
+                          background-color: #f8d7da;
+                          color: #721c24;
+                          border: 1px solid #f5c6cb;
+                          padding: 20px;
+                          border-radius: 8px;
+                          z-index: 1000;
+                      ">
+                          {{ error_message }}
+                          <button onclick="document.getElementById('errorBox').style.display='none'"
+                                  style="margin-left: 10px;">×</button>
+                      </div>
+                    {% endif %}
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="loginEmail">نام کاربری:</label>
+                            <input type="text" name="username" id="loginEmail" class="form-control" required placeholder="example@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword">کلمه عبور:</label>
+                            <input type="password" name="password" id="loginPassword" class="form-control" required placeholder="کلمه عبور خود را وارد کنید">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> ورود به حساب</button>
+
+                        <p style="text-align: center; margin-top: 20px;">
+                            <a href="#" onclick="showNotification('در حال حاضر این قابلیت فعال نیست', 'warning'); return false;" style="color: var(--accent-color);">کلمه عبور خود را فراموش کرده‌اید؟</a>
+                        </p>
+                    </form>
+
+                </div>
+            </div>
+
+{% endblock %}

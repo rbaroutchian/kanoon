@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+
+{% endblock %}
+
+{% block page_content %}
+	<!-- صفحه اصلی -->
+        <section id="home" class="page active">
+            <!-- اسلایدر -->
+            <div class="slider-container">
+                <div class="slider" id="slider">
+                    {% for slide in sliders %}
+                    <div class="slide" style="background-image: url('{{ slide.image.url }}')">
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h2>{{ slide.title}}</h2>
+                            <p>{{ slide.description }} </p>
+                            <a href="{% url 'product_page' %}" class="btn btn-primary" ><i class="fas fa-arrow-left"></i> مشاهده کلاس‌ها</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <div class="slider-nav" id="sliderNav">
+                    <div class="slider-dot active" data-slide="0"></div>
+                    <div class="slider-dot" data-slide="1"></div>
+                    <div class="slider-dot" data-slide="2"></div>
+                </div>
+
+                <div class="slider-arrows">
+                    <button class="slider-btn" id="prevBtn"><i class="fas fa-chevron-right"></i></button>
+                    <button class="slider-btn" id="nextBtn"><i class="fas fa-chevron-left"></i></button>
+                </div>
+            </div>
+
+            <!-- دوره‌های ویژه -->
+            <h2 class="section-title">کلاس‌ها و دوره‌های ویژه</h2>
+
+            <div class="courses-grid">
+                <!-- کلاس 1 -->
+                {% for item in products %}
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('{{ item.image.url }}')"></div>
+                    <div class="course-content">
+                        <h3 class="course-title">{{ item.title }}</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-users"></i>{{ item.age_range }}</span>
+                            <span><i class="fas fa-chalkboard-teacher"></i>مدرس: {{ item.teacher }}   </span>
+                            <span><i class="fas fa-clock"></i> {{ item.jalase_count }}</span>
+                        </div>
+                        <p class="course-description">{{ item.short_desc }}</p>
+{#                        <a href="{% url 'pishsabt_page' %}?product_id={{ item.id }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> مشاهده جزئیات و پیش ثبت نام </a>#}
+                        <a href="{{ item.get_absolute_url }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> مشاهده جزئیات و پیش ثبت نام </a>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+
+            </div>
+        </section>
+
+        
+
+
+
+
+
+
+        <!-- صفحه پروفایل -->
+        <section id="profile" class="page">
+            <div class="page-container">
+                <h2 class="page-title">پروفایل کاربری</h2>
+
+                <div class="profile-container">
+                    <div class="profile-sidebar">
+                        <div class="profile-avatar">
+                            <div class="avatar-circle">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 id="profileUserName">مهدی محمدی</h3>
+                            <p>عضو از: تیر ۱۴۰۲</p>
+                            <div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.1); border-radius: 8px;">
+                                <p style="font-size: 0.9rem;"><i class="fas fa-ticket-alt"></i> بلیط‌های رزرو شده امروز: <span id="dailyTickets">۲</span> از ۴</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-menu">
+                            <ul>
+                                <li><a href="#" class="active" onclick="showProfileTab('info'); return false;"><i class="fas fa-user-edit"></i> اطلاعات شخصی</a></li>
+                                <li><a href="#" onclick="showProfileTab('registrations'); return false;"><i class="fas fa-list-alt"></i> ثبت‌نام‌های من</a></li>
+                                <li><a href="#" onclick="showProfileTab('tickets'); return false;"><i class="fas fa-ticket-alt"></i> بلیط‌های رزرو شده</a></li>
+                                <li><a href="#" onclick="showProfileTab('history'); return false;"><i class="fas fa-history"></i> سوابق فعالیت</a></li>
+                                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج از حساب</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="profile-content">
+                        <div id="profileInfo" class="profile-tab active">
+                            <h3 style="color: var(--primary-color); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee;">اطلاعات شخصی</h3>
+                            <div class="form-container">
+                                <form id="profileForm">
+                                    <div class="form-group">
+                                        <label for="profileName">نام و نام خانوادگی:</label>
+                                        <input type="text" id="profileName" class="form-control" value="مهدی محمدی">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="profileEmail">آدرس ایمیل:</label>
+                                        <input type="email" id="profileEmail" class="form-control" value="mehdi@example.com">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="profilePhone">شماره تماس:</label>
+                                        <input type="tel" id="profilePhone" class="form-control" value="09123456789">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="profileAddress">آدرس:</label>
+                                        <textarea id="profileAddress" class="form-control" rows="3">تهران، خیابان آزادی، کوچه بهار، پلاک ۱۲</textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> ذخیره تغییرات</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div id="profileRegistrations" class="profile-tab">
+                            <h3 style="color: var(--primary-color); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee;">ثبت‌نام‌های من</h3>
+                            <div id="registrationsList">
+                                <!-- لیست ثبت‌نام‌ها از بک‌اند لود می‌شود -->
+                                <div style="background-color: #f8f9fa; padding: 25px; border-radius: var(--border-radius); text-align: center; margin-bottom: 20px;">
+                                    <i class="fas fa-clipboard-list" style="font-size: 3rem; color: #aaa; margin-bottom: 15px;"></i>
+                                    <h4 style="color: #666;">در حال حاضر هیچ ثبت‌نام فعالی ندارید.</h4>
+                                    <p style="margin-top: 10px;">می‌توانید از بخش <a href="#" onclick="showPage('courses'); return false;" style="color: var(--accent-color);">کلاس‌ها</a> در کلاس مورد نظر خود ثبت‌نام کنید.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="profileTickets" class="profile-tab">
+                            <h3 style="color: var(--primary-color); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee;">بلیط‌های رزرو شده</h3>
+                            <div id="ticketsList">
+                                <!-- لیست بلیط‌ها از بک‌اند لود می‌شود -->
+                                <div style="background-color: #f8f9fa; padding: 25px; border-radius: var(--border-radius); text-align: center; margin-bottom: 20px;">
+                                    <i class="fas fa-film" style="font-size: 3rem; color: #aaa; margin-bottom: 15px;"></i>
+                                    <h4 style="color: #666;">هیچ بلیط رزرو شده‌ای ندارید.</h4>
+                                    <p style="margin-top: 10px;">می‌توانید از بخش <a href="#" onclick="showPage('cinema'); return false;" style="color: var(--accent-color);">گیشه بلیط</a> بلیط سینما رزرو کنید.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="profileHistory" class="profile-tab">
+                            <h3 style="color: var(--primary-color); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee;">سوابق فعالیت</h3>
+                            <div id="historyList">
+                                <!-- سوابق فعالیت از بک‌اند لود می‌شود -->
+                                <div style="background-color: #f8f9fa; padding: 25px; border-radius: var(--border-radius); text-align: center;">
+                                    <i class="fas fa-history" style="font-size: 3rem; color: #aaa; margin-bottom: 15px;"></i>
+                                    <h4 style="color: #666;">هیچ فعالیتی ثبت نشده است.</h4>
+                                    <p style="margin-top: 10px;">پس از شرکت در کلاس‌ها یا رزرو بلیط، سوابق شما در این بخش نمایش داده می‌شود.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}
+

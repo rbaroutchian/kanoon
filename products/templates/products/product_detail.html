@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+
+{% endblock %}
+
+{% block page_content %}
+    <div class="course-detail-page">
+
+    <!-- هدر دوره -->
+    <div class="course-detail-header">
+        <div class="course-detail-image"
+             style="background-image: url('{{ productd.image.url }}')">
+        </div>
+
+        <div class="course-detail-info">
+            <h1 class="course-title">{{ productd.title }}</h1>
+
+            <div class="course-meta">
+                <span><i class="fas fa-users"></i> رده سنی: {{ productd.age_range }} سال</span>
+                <span><i class="fas fa-chalkboard-teacher"></i> مدرس: {{ productd.teacher }}</span>
+                <span><i class="fas fa-clock"></i> {{ productd.jalase_count }} جلسه</span>
+            </div>
+
+            <p class="course-short-desc">
+                {{ productd.short_desc }}
+            </p>
+
+            <a href="{% url 'pishsabt_page' %}?product_id={{ productd.id }}"
+               class="btn btn-primary">
+                پیش ثبت‌نام
+            </a>
+        </div>
+    </div>
+
+    <!-- توضیحات کامل -->
+    <div class="course-detail-body">
+        <h3>توضیحات دوره</h3>
+        <p>
+            {{ productd.long_desc|linebreaks }}
+        </p>
+    </div>
+
+</div>
+{% endblock %}

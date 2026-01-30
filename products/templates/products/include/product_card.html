@@ -1,0 +1,15 @@
+{% load static %}
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('{{ item.image.url }}')"></div>
+                    <div class="course-content">
+                        <h3 class="course-title">{{ item.title}}</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-users"></i>{{ item.age_range }}  </span>
+                            <span><i class="fas fa-chalkboard-teacher"></i>مدرس: {{ item.teacher }}   </span>
+                            <span><i class="fas fa-clock"></i> {{item.jalase_count}} جلسه</span>
+                        </div>
+                        <p class="course-description">{{ item.short_desc }}</p>
+{#                        <a href="{% url 'pishsabt_page' %}?product_id={{ item.id }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> پیش ثبت‌نام </a>#}
+                        <a href="{{ item.get_absolute_url }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> مشاهده جزئیات و پیش ثبت نام </a>
+                    </div>
+                </div>

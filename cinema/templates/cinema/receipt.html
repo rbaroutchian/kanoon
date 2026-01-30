@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+	رسید رزرو بلیط
+{% endblock %}
+
+{% block page_content %}
+<h3>رزرو با موفقیت انجام شد 🎫</h3>
+
+<p>کد رهگیری: <strong>{{ reserve.tracking_code }}</strong></p>
+<p>فیلم: {{ reserve.movie.title }}</p>
+<p>تعداد بلیط: {{ reserve.count }}</p>
+<p>تاریخ: {{ reserve.created_at|date:"Y/m/d H:i" }}</p>
+{% endblock %}

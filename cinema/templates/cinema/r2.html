@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}رزرو بلیط - {{ movie.title }}{% endblock %}
+
+{% block page_content %}
+<div class="page-container">
+
+    <!-- کارت فیلم -->
+    <div class="movie-card">
+        <div class="poster">
+            <img src="{% if movie.poster %}{{ movie.poster.url }}{% else %}/static/images/default.jpg{% endif %}" alt="{{ movie.title }}">
+        </div>
+        <div class="movie-info">
+            <h2>{{ movie.title }}</h2>
+            <p><strong>روز اکران:</strong> {{ movie.day }}</p>
+            <p><strong>مدت زمان:</strong> {{ movie.movie_time }}</p>
+            <p><strong>ساعت شروع سانس:</strong> {{ movie.start }}</p>
+            <p><strong>ظرفیت باقی‌مانده:</strong> {{ movie.remaining_capacity }}</p>
+            <p><strong>حداکثر رزرو برای هر نفر:</strong> {{ movie.remaining_per_user }}</p>
+            <p>{{ movie.short_desc }}</p>
+        </div>
+    </div>
+
+    <!-- انتخاب سانس -->
+    <form method="post" id="selectShowForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>انتخاب سانس:</label>
+            <select name="show_time" class="form-control" onchange="document.getElementById('selectShowForm').submit()" required>
+                <option value="">یک سانس را انتخاب کنید</option>
+                {% for st in show_times %}
+                    <option value="{{ st.pk }}" {% if selected_show and selected_show.pk == st.pk %}selected{% endif %}>
+                        {{ st.time }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    {% if selected_show %}
+    <h3>انتخاب صندلی‌ها</h3>
+<div class="seats-wrapper">
+    {% for row in seat_layout %}
+    <div class="seat-row">
+
+        <div class="seats-right">
+            {% for seat in row.right %}
+                <div class="seat {% if seat in reserved_seats %}reserved{% endif %}" data-seat="{{ seat }}">
+                    {{ seat }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="aisle"></div>
+
+        <div class="seats-left">
+            {% for seat in row.left %}
+                <div class="seat {% if seat in reserved_seats %}reserved{% endif %}" data-seat="{{ seat }}">
+                    {{ seat }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+    <!-- فرم ثبت رزرو -->
+    <form method="post" id="reserveForm">
+        {% csrf_token %}
+        <input type="hidden" name="show_time" value="{{ selected_show.pk }}">
+        <input type="hidden" name="selected_seats" id="selectedSeats">
+        <button type="submit" class="btn btn-primary mt-3">ثبت رزرو</button>
+    </form>
+    {% endif %}
+</div>
+
+{% block extra_style %}
+<style>
+.page-container { max-width: 1200px; margin:auto; padding:20px; }
+.movie-card { display:flex; margin-bottom:30px; border:1px solid #ccc; border-radius:8px; overflow:hidden; }
+.poster img { width:300px; height:450px; object-fit:cover; }
+.movie-info { padding:20px; flex:1; }
+
+.seats-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.seat-row {
+    display: flex;
+    align-items: center;
+}
+
+.seats-right,
+.seats-left {
+    display: flex;
+    gap: 6px;
+}
+
+.aisle {
+    width: 40px;
+}
+/* صندلی */
+.seat {
+    width: 40px;
+    height: 40px;
+    background: #eee;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.seat.selected {
+    background: #3498db;
+    color: #fff;
+}
+
+.seat.reserved {
+    background: #e74c3c;
+    color: #fff;
+    pointer-events: none;
+}
+
+</style>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const maxPerUser = {{ movie.remaining_per_user }};
+    const seats = document.querySelectorAll('.seat:not(.reserved)');
+    const selectedInput = document.getElementById('selectedSeats');
+    let selectedSeats = [];
+
+    seats.forEach(seat => {
+        seat.addEventListener('click', () => {
+            const seatNum = parseInt(seat.dataset.seat);
+
+            if (seat.classList.contains('selected')) {
+                seat.classList.remove('selected');
+                selectedSeats = selectedSeats.filter(s => s !== seatNum);
+            } else {
+                if (selectedSeats.length >= maxPerUser) {
+                    alert('شما نمی‌توانید بیش از ' + maxPerUser + ' صندلی انتخاب کنید');
+                    return;
+                }
+                seat.classList.add('selected');
+                selectedSeats.push(seatNum);
+            }
+
+            selectedInput.value = selectedSeats.join(',');
+        });
+    });
+
+    // بعد از submit رزرو، صندلی‌های انتخاب‌شده قرمز شوند
+    const reserveForm = document.getElementById('reserveForm');
+    reserveForm.addEventListener('submit', () => {
+        seats.forEach(seat => {
+            if (seat.classList.contains('selected')) {
+                seat.classList.remove('selected');
+                seat.classList.add('reserved');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

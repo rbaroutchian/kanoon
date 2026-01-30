@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}
+
+{% endblock %}
+
+{% block page_content %}
+<div class="page-container">
+
+    <h2 class="page-title">رزرو بلیط</h2>
+    <p>
+        برای رزرو بلیط این فیلم، اطلاعات زیر را بررسی کرده و تعداد بلیط مورد نظر خود را انتخاب کنید.
+    </p>
+
+    <!-- کارت فیلم -->
+    <div class="course-card" style="margin-bottom: 30px;">
+        <div class="course-image"
+             style="background-image: url('{{ movie.poster.url }}')">
+        </div>
+
+        <div class="course-content">
+            <h3 class="course-title">{{ movie.title }}</h3>
+
+            <div class="course-meta">
+                <span><i class="fas fa-user-graduate"></i> مدرس: {{ movie.teacher }}</span>
+                <span><i class="fas fa-calendar-day"></i> {{ movie.day }}</span>
+                <span><i class="fas fa-chair"></i> ظرفیت باقی‌مانده: {{ movie.capacity }} نفر</span>
+            </div>
+
+            <p class="course-description">
+                {{ movie.short_desc }}
+            </p>
+        </div>
+    </div>
+
+    <!-- فرم رزرو -->
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>تعداد بلیط:</label>
+                <input type="number"
+                       name="count"
+                       class="form-control"
+                       min="1"
+
+                       max="{{ movie.max_ticket_per_user }}"
+                       required>
+            </div>
+
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error|escape  }}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-ticket-alt"></i>
+                ثبت رزرو
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
+

@@ -1,0 +1,14 @@
+{% load static %}
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('{{ movie.poster.url }}')"></div>
+                    <div class="course-content">
+                        <h3 class="course-title">{{ movie.title}}</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-calendar-day"></i> {{movie.day}} </span>
+                            <span><i class="fas fa-clock"></i> {{movie.start}} </span>
+                            <span><i class="fas fa-chair"></i> {{movie.capacity}} </span>
+                        </div>
+                        <p class="course-description">{{ item.short_desc }}</p>
+                        <a href="{% url 'movie_reserve' movie.id %}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> رزرو بلیط</a>
+                    </div>
+                </div>

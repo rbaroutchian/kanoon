@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+	درباره کانون
+{% endblock %}
+
+{% block page_content %}
+	            <div class="page-container">
+                <h2 class="page-title">درباره {{ site_setting.site_name}}</h2>
+
+                <p>{{ site_setting.about_us_text}}</p>
+
+                <div style="margin: 40px 0;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px;">
+                        <div style="background-color: #f8f9fa; padding: 25px; border-radius: var(--border-radius); text-align: center;">
+                            <div style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 15px;">
+                                <i class="fas fa-book-reader"></i>
+                            </div>
+                            <h3 style="color: var(--primary-color); margin-bottom: 10px;">کتابخانه‌های تخصصی</h3>
+                            <p>بیش از ۱۵۰۰ کتابخانه در سراسر کشور با منابع غنی مخصوص کودکان و نوجوانان</p>
+                        </div>
+
+                        <div style="background-color: #f8f9fa; padding: 25px; border-radius: var(--border-radius); text-align: center;">
+                            <div style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 15px;">
+                                <i class="fas fa-theater-masks"></i>
+                            </div>
+                            <h3 style="color: var(--primary-color); margin-bottom: 10px;">فعالیت‌های هنری</h3>
+                            <p>برگزاری کارگاه‌های تخصصی در زمینه‌های نقاشی، تئاتر، موسیقی و فیلمسازی</p>
+                        </div>
+
+                        <div style="background-color: #f8f9fa; padding: 25px; border-radius: var(--border-radius); text-align: center;">
+                            <div style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 15px;">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 style="color: var(--primary-color); margin-bottom: 10px;">مربیان مجرب</h3>
+                            <p>همکاری با بیش از ۵۰۰۰ مربی متخصص و دلسوز در سراسر کشور</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; color: var(--primary-color); padding-bottom: 10px; border-bottom: 2px solid #eee;">ارتباط با ما</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div>
+                        <p><i class="fas fa-map-marker-alt" style="color: var(--secondary-color); margin-left: 10px;"></i> <strong>آدرس:</strong>{{ site_setting.address }}</p>
+                    </div>
+                    <div>
+                        <p><i class="fas fa-phone" style="color: var(--secondary-color); margin-left: 10px;"></i> <strong>تلفن:</strong>
+                            {{site_setting.phone}}</p>
+{#                        <p><i class="fas fa-fax" style="color: var(--secondary-color); margin-left: 10px;"></i> <strong>فکس:</strong> ۰۲۱-۸۸۹۶۵۴۳۳</p>#}
+                    </div>
+                    <div>
+                        <p><i class="fas fa-envelope" style="color: var(--secondary-color); margin-left: 10px;"></i> <strong>ایمیل:</strong>
+                            {{ site_setting.email}}</p>
+                        <p><i class="fas fa-globe" style="color: var(--secondary-color); margin-left: 10px;"></i> <strong>وبسایت:</strong> www.kanoon-baradaran.ir</p>
+                    </div>
+                </div>
+            </div>
+
+{% endblock %}

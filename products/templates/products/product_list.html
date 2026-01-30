@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+
+{% endblock %}
+
+{% block page_content %}
+    <div class="page-container">
+        <h2 class="page-title">معرفی کلاس ها و دوره های کانون</h2>
+            <div class="courses-grid">
+            {% for item in products %}
+                {% include 'products/include/product_card.html' %}
+            {% endfor %}
+
+
+
+            </div>
+    </div>
+{% endblock %}

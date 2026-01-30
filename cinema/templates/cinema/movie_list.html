@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+
+{% endblock %}
+
+{% block page_content %}
+    <div class="page-container">
+        <h2 class="page-title">گیشه بلیط سینمای کانون</h2>
+
+        <p>
+            در این بخش می‌توانید بلیط سینمای کانون را رزرو کنید.
+        </p>
+
+        <div class="ticket-limits">
+            <p>
+                <i class="fas fa-info-circle"></i>
+                توجه: هر کاربر می‌تواند حداکثر ۴ بلیط در روز رزرو کند.
+            </p>
+        </div>
+
+        <!-- سانس‌ها (خام، بدون داده فیک) -->
+        <div class="cinema-schedule">
+
+            {% for movie in movies %}
+                {% include 'cinema/include/movie_card.html' %}
+{#            <div class="session-card">#}
+{#                <div class="session-image">#}
+{#                    <img src="/media/ok2.jpg" alt="پوستر فیلم">#}
+{#                </div>#}
+{##}
+{#                <h3 class="session-title">#}
+{#                    بچه زرنگ#}
+{#                </h3>#}
+{##}
+{#                <div class="session-info">#}
+{#                    <span class="session-date">#}
+{#                        <i class="fas fa-calendar-alt"></i>#}
+{#                        سه‌شنبه۱۸دی#}
+{#                    </span>#}
+{#                    <span class="session-time">#}
+{#                         <i class="fas fa-clock"></i>#}
+{#                             ساعت۱۶:۳۰#}
+{#                    </span>#}
+{#                    <span class="session-capacity">#}
+{#                         <i class="fas fa-chair"></i>#}
+{#                         ظرفیت باقی‌مانده:۱۲نفر#}
+{#                    </span>#}
+{#                </div>#}
+{##}
+{#                <button class="btn btn-block session-reserve-btn">#}
+{#                    رزرو بلیط#}
+{#                </button>#}
+{#            </div>#}
+            {% endfor %}
+
+
+
+        </div>
+
+        <!-- نتیجه رزرو -->
+        <div id="reservationResult" style="display:none">
+            <div class="tracking-code-container">
+                <h3><i class="fas fa-ticket-alt"></i> وضعیت رزرو</h3>
+                <div class="tracking-code"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+

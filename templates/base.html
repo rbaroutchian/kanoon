@@ -1,0 +1,743 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block page_title %}
+    	
+    {% endblock %}
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- فونت‌های ایرانی و مدرن -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+
+    
+</head>
+<body>
+    <!-- هدر -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home_page' %}" class="logo" onclick="showPage('home'); return false;">
+                <div class="logo-icon">
+                    <img src="{{ site_setting.site_logo.url }}" class="logo-img">
+{#                    <i class="fas fa-child"></i>#}
+                </div>
+                <div class="logo-text">
+                    <h1>کانون 9 دی</h1>
+                    <span>کودکان و نوجوانان</span>
+                </div>
+            </a>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="{% url 'home_page' %}" class="active"><i class="fas fa-home"></i> خانه</a></li>
+                    <li><a href="{% url 'product_page' %}"><i class="fas fa-book-open"></i> کلاس‌ها</a></li>
+                    <li><a href="{% url 'movie_list' %}"><i class="fas fa-ticket-alt"></i> گیشه بلیط</a></li>
+                    <li><a href="{% url 'about_page' %}"><i class="fas fa-info-circle"></i> درباره ما</a></li>
+                </ul>
+            </nav>
+
+            <div class="user-menu">
+                {% if request.user.is_authenticated %}
+{#                    <a href="{% url 'profile_page' %}" class="profile-btn">#}
+{#                    <i class="fas fa-user-circle"></i>#}
+{#                    <span id="userName">پروفایل</span>#}
+{#                </a>#}
+                  <a href="{% url 'profile_page' %}" class="register-btn" id="registerBtn" onclick="showPage('auth'); showAuthTab('register'); return false;"><i class="fas fa-user-plus"></i> پروفایل</a>   
+
+                {% else %}
+                    <a href="{% url 'login_page' %}" class="login-btn" onclick="showPage('auth'); showAuthTab('login'); return false;"><i class="fas fa-sign-in-alt"></i> ورود</a>
+                    <a href="{% url 'register_page' %}" class="register-btn" id="registerBtn" onclick="showPage('auth'); showAuthTab('register'); return false;"><i class="fas fa-user-plus"></i> ثبت‌نام</a>   
+                {% endif %}
+                
+            </div>
+        </div>
+    </header>
+
+    <!-- محتوای اصلی -->
+    <main>
+        
+        {% block page_content %}
+        
+        {% endblock %}
+        
+    </main>
+
+    <!-- فوتر -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>{{ site_setting.site_name }}</h3>
+                <p>{{ site_setting.about_us_text }}</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>لینک‌های سریع</h3>
+                <ul class="footer-links">
+                    <li><a href="{% url 'home_page' %}"><i class="fas fa-chevron-left"></i> صفحه اصلی</a></li>
+                    <li><a href="{% url 'product_page' %}"><i class="fas fa-chevron-left"></i> کلاس‌ها و دوره‌ها</a></li>
+                    <li><a href="{% url 'movie_list' %}"><i class="fas fa-chevron-left"></i> گیشه بلیط سینما</a></li>
+                    <li><a href="{% url 'about_page' %}"><i class="fas fa-chevron-left"></i> درباره ما</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>تماس با ما</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> {{ site_setting.address }}</a></li>
+                    <li><a href="tel:+982188965432"><i class="fas fa-phone"></i> {{site_setting.phone}}</a></li>
+                    <li><a href="mailto:info@kanoonparvaresh.com"><i class="fas fa-envelope"></i>
+                        {{ site_setting.email}}</a></li>
+                    <li><a href="#"><i class="fas fa-clock"></i> شنبه تا چهارشنبه: ۸:۰۰ - ۱۶:۰۰</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>{{ site_setting.copy_right }}</p>
+        </div>
+    </footer>
+
+    <!-- نوتیفیکیشن -->
+    <div id="notification" class="notification" style="display: none;">
+        <i class="fas fa-check-circle"></i>
+        <div>
+            <strong id="notificationTitle">موفقیت‌آمیز</strong>
+            <p id="notificationMessage">عملیات با موفقیت انجام شد.</p>
+        </div>
+    </div>
+
+    <script>
+        // داده‌های نمونه برای سانس‌های سینما
+        const cinemaSessions = [
+            { id: 1, film: "شازده کوچولو", time: "۱۶:۰۰", date: "۱۴۰۳/۰۵/۱۰", price: "۳۵,۰۰۰ تومان", seats: 12, image: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1476&q=80" },
+            { id: 2, film: "هری پاتر و سنگ جادو", time: "۱۸:۳۰", date: "۱۴۰۳/۰۵/۱۰", price: "۴۰,۰۰۰ تومان", seats: 8, image: "https://images.unsplash.com/photo-1608889476561-6242cfdbf622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1480&q=80" },
+            { id: 3, film: "شیرشاه", time: "۱۵:۰۰", date: "۱۴۰۳/۰۵/۱۱", price: "۳۵,۰۰۰ تومان", seats: 15, image: "https://images.unsplash.com/photo-1595769812725-4c6564f7046b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" },
+            { id: 4, film: "در جستجوی نمو", time: "۱۷:۰۰", date: "۱۴۰۳/۰۵/۱۱", price: "۳۰,۰۰۰ تومان", seats: 5, image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1450&q=80" },
+            { id: 5, film: "فروزن", time: "۱۹:۰۰", date: "۱۴۰۳/۰۵/۱۲", price: "۴۰,۰۰۰ تومان", seats: 20, image: "https://images.unsplash.com/photo-1595769812725-4c6564f7046b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" },
+            { id: 6, film: "مدرسه تابستانی", time: "۱۶:۳۰", date: "۱۴۰۳/۰۵/۱۲", price: "۲۵,۰۰۰ تومان", seats: 10, image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1450&q=80" }
+        ];
+
+        // وضعیت کاربر
+        let isLoggedIn = false;
+        let currentUser = null;
+        let currentSlide = 0;
+        let slideInterval;
+        let dailyTicketCount = 2; // تعداد بلیط‌های رزرو شده امروز کاربر (از بک‌اند می‌آید)
+
+        // وقتی DOM بارگذاری شد
+        document.addEventListener('DOMContentLoaded', function() {
+            // تنظیم اسلایدر
+            initSlider();
+
+            // پر کردن سانس‌های سینما
+            populateCinemaSchedule();
+
+            // مدیریت منوی موبایل
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.getElementById('navLinks');
+
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ?
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+
+            // بستن منوی موبایل با کلیک روی لینک
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                });
+            });
+
+            // مدیریت فرم ثبت‌نام کلاس
+            const courseRegistrationForm = document.getElementById('courseRegistrationForm');
+            courseRegistrationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                if (!isLoggedIn) {
+                    showNotification('خطا', 'برای ثبت‌نام در کلاس‌ها ابتدا وارد حساب کاربری خود شوید.', 'error');
+                    showPage('auth');
+                    showAuthTab('login');
+                    return;
+                }
+
+                // شبیه‌سازی ثبت درخواست
+                document.getElementById('registrationResult').style.display = 'block';
+
+                // ریست فرم
+                courseRegistrationForm.reset();
+
+                // اسکرول به نتیجه
+                document.getElementById('registrationResult').scrollIntoView({ behavior: 'smooth' });
+
+                showNotification('موفقیت‌آمیز', 'درخواست پیش‌ثبت‌نام شما با موفقیت ثبت شد. همکاران ما طی ۴۸ ساعت آینده با شما تماس خواهند گرفت.');
+
+                // ذخیره در localStorage (شبیه‌سازی بک‌اند)
+                const registrationData = {
+                    course: document.getElementById('courseSelect').value,
+                    childName: document.getElementById('childName').value,
+                    childAge: document.getElementById('childAge').value,
+                    parentName: document.getElementById('parentName').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    notes: document.getElementById('notes').value,
+                    date: new Date().toLocaleDateString('fa-IR'),
+                    status: 'در انتظار تماس'
+                };
+
+                saveRegistrationToLocalStorage(registrationData);
+            });
+
+            // مدیریت فرم پروفایل
+            const profileForm = document.getElementById('profileForm');
+            profileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                showNotification('موفقیت‌آمیز', 'تغییرات پروفایل با موفقیت ذخیره شد.');
+            });
+
+            // مدیریت فرم ورود
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                // اعتبارسنجی ساده
+                if (!email || !password) {
+                    showNotification('خطا', 'لطفاً ایمیل و رمز عبور را وارد کنید.', 'error');
+                    return;
+                }
+
+                // شبیه‌سازی ورود (در حالت واقعی باید با بک‌اند چک شود)
+                isLoggedIn = true;
+                currentUser = {
+                    name: 'مهدی محمدی',
+                    email: email
+                };
+
+                // به‌روزرسانی رابط کاربری
+                updateUserUI();
+
+                // ریست فرم
+                document.getElementById('loginForm').reset();
+
+                // نمایش صفحه پروفایل
+                showPage('profile');
+
+                showNotification('خوش آمدید', `سلام ${currentUser.name}! به کانون پرورش فکری خوش آمدید.`);
+            });
+
+            // مدیریت فرم ثبت‌نام
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const phone = document.getElementById('registerPhone').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirmPassword = document.getElementById('registerPasswordConfirm').value;
+
+                // اعتبارسنجی
+                if (!name || !email || !phone || !password || !confirmPassword) {
+                    showNotification('خطا', 'لطفاً تمام فیلدها را پر کنید.', 'error');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showNotification('خطا', 'کلمه عبور باید حداقل ۶ کاراکتر باشد.', 'error');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    showNotification('خطا', 'کلمه‌های عبور مطابقت ندارند.', 'error');
+                    return;
+                }
+
+                // شبیه‌سازی ثبت‌نام (در حالت واقعی باید به بک‌اند ارسال شود)
+                isLoggedIn = true;
+                currentUser = {
+                    name: name,
+                    email: email
+                };
+
+                // به‌روزرسانی رابط کاربری
+                updateUserUI();
+
+                // به‌روزرسانی اطلاعات پروفایل
+                document.getElementById('profileUserName').textContent = currentUser.name;
+                document.getElementById('profileName').value = currentUser.name;
+                document.getElementById('profileEmail').value = currentUser.email;
+                document.getElementById('profilePhone').value = phone;
+
+                // ریست فرم
+                document.getElementById('registerForm').reset();
+
+                // نمایش صفحه پروفایل
+                showPage('profile');
+
+                showNotification('موفقیت‌آمیز', 'ثبت‌نام شما با موفقیت انجام شد. اکنون می‌توانید از خدمات کانون استفاده کنید.');
+            });
+
+            // مدیریت خروج از حساب
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                isLoggedIn = false;
+                currentUser = null;
+
+                // به‌روزرسانی رابط کاربری
+                updateUserUI();
+
+                // برگشت به صفحه اصلی
+                showPage('home');
+
+                showNotification('با موفقیت خارج شدید', 'از حساب کاربری خود خارج شدید.');
+            });
+
+            // بارگذاری اطلاعات کاربر در صورت وجود در localStorage
+            loadUserFromLocalStorage();
+        });
+
+        // تابع‌های کمکی
+        function initSlider() {
+            const slider = document.getElementById('slider');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const dots = document.querySelectorAll('.slider-dot');
+
+            function showSlide(index) {
+                if (index < 0) index = 2;
+                if (index > 2) index = 0;
+                currentSlide = index;
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+                // به‌روزرسانی نقاط
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentSlide);
+                });
+            }
+
+            prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+            nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+
+            // کلیک روی نقاط
+            dots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const slideIndex = parseInt(this.getAttribute('data-slide'));
+                    showSlide(slideIndex);
+                });
+            });
+
+            // اسلایدر خودکار
+            startAutoSlide();
+
+            // توقف اسلایدر هنگام هاور
+            slider.parentElement.addEventListener('mouseenter', stopAutoSlide);
+            slider.parentElement.addEventListener('mouseleave', startAutoSlide);
+        }
+
+        function startAutoSlide() {
+            if (slideInterval) clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                showSlide(currentSlide + 1);
+            }, 5000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
+        }
+
+        function populateCinemaSchedule() {
+            const cinemaSchedule = document.getElementById('cinemaSchedule');
+            cinemaSessions.forEach(session => {
+                const sessionCard = document.createElement('div');
+                sessionCard.className = 'session-card';
+                sessionCard.innerHTML = `
+                    <div style="height: 150px; background-image: url('${session.image}'); background-size: cover; background-position: center; border-radius: 8px; margin-bottom: 15px;"></div>
+                    <h3>${session.film}</h3>
+                    <div class="session-info">
+                        <span><i class="far fa-calendar-alt"></i> ${session.date}</span>
+                        <span><i class="far fa-clock"></i> ${session.time}</span>
+                    </div>
+                    <div class="session-info">
+                        <span><i class="fas fa-ticket-alt"></i> ${session.price}</span>
+                        <span><i class="fas fa-chair"></i> ${session.seats} صندلی</span>
+                    </div>
+                    <button class="btn btn-primary btn-block reserve-btn" data-id="${session.id}" ${!isLoggedIn ? 'disabled style="opacity: 0.6;"' : ''}>
+                        <i class="fas fa-ticket-alt"></i> ${isLoggedIn ? 'رزرو بلیط' : 'برای رزرو وارد شوید'}
+                    </button>
+                `;
+                cinemaSchedule.appendChild(sessionCard);
+            });
+
+            // مدیریت رویداد رزرو بلیط
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('reserve-btn') || e.target.closest('.reserve-btn')) {
+                    const btn = e.target.classList.contains('reserve-btn') ? e.target : e.target.closest('.reserve-btn');
+
+                    // اگر کاربر وارد نشده باشد
+                    if (!isLoggedIn) {
+                        showNotification('خطا', 'برای رزرو بلیط ابتدا وارد حساب کاربری خود شوید.', 'error');
+                        showPage('auth');
+                        showAuthTab('login');
+                        return;
+                    }
+
+                    // چک کردن محدودیت تعداد بلیط
+                    if (dailyTicketCount >= 4) {
+                        showNotification('خطا', 'شما امروز به حداکثر تعداد مجاز بلیط (۴ بلیط) رسیده‌اید.', 'error');
+                        return;
+                    }
+
+                    const sessionId = parseInt(btn.getAttribute('data-id'));
+                    reserveTicket(sessionId);
+                }
+            });
+        }
+
+        function reserveTicket(sessionId) {
+            const session = cinemaSessions.find(s => s.id === sessionId);
+            if (session.seats <= 0) {
+                showNotification('خطا', 'متأسفانه ظرفیت این سانس تکمیل شده است.', 'error');
+                return;
+            }
+
+            // کاهش تعداد صندلی‌های باقیمانده
+            session.seats--;
+
+            // افزایش تعداد بلیط‌های رزرو شده کاربر
+            dailyTicketCount++;
+            document.getElementById('dailyTickets').textContent = dailyTicketCount;
+
+            // به‌روزرسانی نمایش صندلی‌ها
+            const sessionCard = document.querySelector(`.reserve-btn[data-id="${sessionId}"]`).closest('.session-card');
+            sessionCard.querySelector('.fa-chair').parentElement.innerHTML = `<i class="fas fa-chair"></i> ${session.seats} صندلی`;
+
+            // نمایش کد رهگیری (کد واقعی از بک‌اند می‌آید)
+            const reservationCode = 'CIN-' + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('reservationCode').textContent = reservationCode;
+            document.getElementById('reservationResult').style.display = 'block';
+
+            // اسکرول به نتیجه
+            document.getElementById('reservationResult').scrollIntoView({ behavior: 'smooth' });
+
+            // ذخیره اطلاعات رزرو در localStorage (شبیه‌سازی بک‌اند)
+            const ticketData = {
+                film: session.film,
+                date: session.date,
+                time: session.time,
+                price: session.price,
+                code: reservationCode,
+                reservationDate: new Date().toLocaleDateString('fa-IR'),
+                status: 'رزرو شده - منتظر پرداخت'
+            };
+
+            saveTicketToLocalStorage(ticketData);
+
+            // به‌روزرسانی دکمه‌های رزرو در صورت رسیدن به حد مجاز
+            updateReserveButtons();
+
+            showNotification('موفقیت‌آمیز', `بلیط سانس "${session.film}" با موفقیت رزرو شد. کد رهگیری: ${reservationCode}`);
+        }
+
+        function updateReserveButtons() {
+            const buttons = document.querySelectorAll('.reserve-btn');
+            buttons.forEach(btn => {
+                if (dailyTicketCount >= 4) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.6';
+                    btn.innerHTML = '<i class="fas fa-ticket-alt"></i> حد مجاز رسیده';
+                }
+            });
+        }
+
+        function showPage(pageId) {
+            // مخفی کردن همه صفحات
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // نمایش صفحه انتخاب شده
+            document.getElementById(pageId).classList.add('active');
+
+            // به‌روزرسانی لینک‌های ناوبری
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick')?.includes(`showPage('${pageId}')`)) {
+                    link.classList.add('active');
+                }
+            });
+
+            // بستن منوی موبایل
+            if (window.innerWidth <= 768) {
+                document.getElementById('navLinks').classList.remove('active');
+                document.getElementById('mobileMenuBtn').innerHTML = '<i class="fas fa-bars"></i>';
+            }
+
+            // اسکرول به بالای صفحه
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // اگر صفحه پروفایل است، اطلاعات را بارگذاری کن
+            if (pageId === 'profile' && isLoggedIn) {
+                loadUserProfileData();
+            }
+        }
+
+        function showAuthTab(tabId) {
+            // به‌روزرسانی تب‌ها
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // نمایش فرم مربوطه
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(tabId === 'login' ? 'loginForm' : 'registerForm').classList.add('active');
+        }
+
+        function showProfileTab(tabId) {
+            // مخفی کردن همه تب‌ها
+            document.querySelectorAll('.profile-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // نمایش تب انتخاب شده
+            document.getElementById('profile' + tabId.charAt(0).toUpperCase() + tabId.slice(1)).classList.add('active');
+
+            // به‌روزرسانی لینک‌های منو پروفایل
+            document.querySelectorAll('.profile-menu a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick')?.includes(`showProfileTab('${tabId}')`)) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function updateUserUI() {
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const profileBtn = document.getElementById('profileBtn');
+            const userName = document.getElementById('userName');
+
+            if (isLoggedIn && currentUser) {
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                profileBtn.style.display = 'flex';
+                userName.textContent = currentUser.name;
+
+                // ذخیره در localStorage
+                localStorage.setItem('kanoon_user', JSON.stringify(currentUser));
+                localStorage.setItem('kanoon_isLoggedIn', 'true');
+
+                // به‌روزرسانی دکمه‌های رزرو
+                updateReserveButtonsUI();
+            } else {
+                loginBtn.style.display = 'inline-block';
+                registerBtn.style.display = 'inline-block';
+                profileBtn.style.display = 'none';
+
+                // حذف از localStorage
+                localStorage.removeItem('kanoon_user');
+                localStorage.removeItem('kanoon_isLoggedIn');
+            }
+        }
+
+        function updateReserveButtonsUI() {
+            const buttons = document.querySelectorAll('.reserve-btn');
+            buttons.forEach(btn => {
+                if (isLoggedIn) {
+                    btn.disabled = dailyTicketCount >= 4;
+                    btn.style.opacity = dailyTicketCount >= 4 ? '0.6' : '1';
+                    btn.innerHTML = `<i class="fas fa-ticket-alt"></i> ${dailyTicketCount >= 4 ? 'حد مجاز رسیده' : 'رزرو بلیط'}`;
+                } else {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.6';
+                    btn.innerHTML = '<i class="fas fa-ticket-alt"></i> برای رزرو وارد شوید';
+                }
+            });
+        }
+
+        function loadUserFromLocalStorage() {
+            const savedUser = localStorage.getItem('kanoon_user');
+            const savedLoginStatus = localStorage.getItem('kanoon_isLoggedIn');
+
+            if (savedUser && savedLoginStatus === 'true') {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    isLoggedIn = true;
+
+                    // بارگذاری تعداد بلیط‌های رزرو شده امروز
+                    const savedTickets = localStorage.getItem('kanoon_dailyTickets');
+                    if (savedTickets) {
+                        dailyTicketCount = parseInt(savedTickets);
+                    }
+
+                    updateUserUI();
+                } catch (e) {
+                    console.error('خطا در بارگذاری اطلاعات کاربر:', e);
+                }
+            }
+        }
+
+        function loadUserProfileData() {
+            // بارگذاری ثبت‌نام‌ها از localStorage
+            const registrations = JSON.parse(localStorage.getItem('kanoon_registrations') || '[]');
+            const registrationsList = document.getElementById('registrationsList');
+
+            if (registrations.length > 0) {
+                registrationsList.innerHTML = '';
+                registrations.forEach(reg => {
+                    const regItem = document.createElement('div');
+                    regItem.className = 'session-card';
+                    regItem.innerHTML = `
+                        <h3>${reg.course}</h3>
+                        <div class="session-info">
+                            <span><i class="fas fa-user"></i> ${reg.childName} (${reg.childAge} سال)</span>
+                            <span><i class="far fa-calendar-alt"></i> ${reg.date}</span>
+                        </div>
+                        <div class="session-info">
+                            <span><i class="fas fa-phone"></i> ${reg.phone}</span>
+                            <span><i class="fas fa-info-circle"></i> ${reg.status}</span>
+                        </div>
+                        ${reg.notes ? `<p style="color: #666; font-size: 0.9rem; margin-top: 10px;"><i class="fas fa-sticky-note"></i> ${reg.notes}</p>` : ''}
+                    `;
+                    registrationsList.appendChild(regItem);
+                });
+            }
+
+            // بارگذاری بلیط‌ها از localStorage
+            const tickets = JSON.parse(localStorage.getItem('kanoon_tickets') || '[]');
+            const ticketsList = document.getElementById('ticketsList');
+
+            if (tickets.length > 0) {
+                ticketsList.innerHTML = '';
+                tickets.forEach(ticket => {
+                    const ticketItem = document.createElement('div');
+                    ticketItem.className = 'session-card';
+                    ticketItem.innerHTML = `
+                        <h3>${ticket.film}</h3>
+                        <div class="session-info">
+                            <span><i class="far fa-calendar-alt"></i> ${ticket.date}</span>
+                            <span><i class="far fa-clock"></i> ${ticket.time}</span>
+                        </div>
+                        <div class="session-info">
+                            <span><i class="fas fa-ticket-alt"></i> ${ticket.price}</span>
+                            <span><i class="fas fa-hashtag"></i> ${ticket.code}</span>
+                        </div>
+                        <div class="session-info">
+                            <span><i class="fas fa-info-circle"></i> ${ticket.status}</span>
+                            <span><i class="far fa-calendar-check"></i> ${ticket.reservationDate}</span>
+                        </div>
+                    `;
+                    ticketsList.appendChild(ticketItem);
+                });
+            }
+
+            // به‌روزرسانی تعداد بلیط‌های امروز
+            document.getElementById('dailyTickets').textContent = dailyTicketCount;
+        }
+
+        function saveRegistrationToLocalStorage(registrationData) {
+            const registrations = JSON.parse(localStorage.getItem('kanoon_registrations') || '[]');
+            registrations.push(registrationData);
+            localStorage.setItem('kanoon_registrations', JSON.stringify(registrations));
+        }
+
+        function saveTicketToLocalStorage(ticketData) {
+            const tickets = JSON.parse(localStorage.getItem('kanoon_tickets') || '[]');
+            tickets.push(ticketData);
+            localStorage.setItem('kanoon_tickets', JSON.stringify(tickets));
+            localStorage.setItem('kanoon_dailyTickets', dailyTicketCount.toString());
+        }
+
+        function showNotification(title, message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            const notificationIcon = notification.querySelector('i');
+
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+
+            // تنظیم رنگ و آیکون بر اساس نوع
+            notification.className = 'notification';
+            if (type === 'error') {
+                notification.classList.add('error');
+                notificationIcon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                notification.classList.add('warning');
+                notificationIcon.className = 'fas fa-exclamation-triangle';
+            } else {
+                notificationIcon.className = 'fas fa-check-circle';
+            }
+
+            notification.style.display = 'flex';
+
+            // مخفی کردن خودکار نوتیفیکیشن
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        function printReservation() {
+            const printContent = `
+                <div style="text-align: center; padding: 30px; font-family: Vazirmatn, Tahoma;">
+                    <h2 style="color: #2c3e50;">کانون پرورش فکری کودکان و نوجوانان</h2>
+                    <h3 style="color: #f1c40f;">کد رهگیری رزرو بلیط سینما</h3>
+                    <div style="font-size: 28px; font-weight: bold; letter-spacing: 5px; margin: 25px 0; padding: 20px; border: 3px dashed #2c3e50; border-radius: 10px;">
+                        ${document.getElementById('reservationCode').textContent}
+                    </div>
+                    <p>لطفاً این کد را به باجه فروش بلیط در کانون ارائه نمایید.</p>
+                    <p>تاریخ چاپ: ${new Date().toLocaleDateString('fa-IR')}</p>
+                    <hr style="margin: 30px 0;">
+                    <p style="font-size: 12px; color: #666;">کانون پرورش فکری کودکان و نوجوانان - کلیه حقوق محفوظ است</p>
+                </div>
+            `;
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function shareReservation() {
+            const code = document.getElementById('reservationCode').textContent;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'کد رهگیری بلیط سینمای کانون',
+                    text: `کد رهگیری بلیط سینمای کانون: ${code}`,
+                })
+                .then(() => console.log('اشتراک‌گذاری موفقیت‌آمیز بود'))
+                .catch((error) => console.log('خطا در اشتراک‌گذاری:', error));
+            } else {
+                // کپی کردن کد به کلیپ‌بورد
+                navigator.clipboard.writeText(code).then(() => {
+                    showNotification('موفقیت‌آمیز', 'کد رهگیری در کلیپ‌بورد کپی شد.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
