@@ -5,6 +5,10 @@ from . models import user
 from django.contrib.auth import authenticate, login,logout
 from django.http import HttpRequest
 from django.urls import reverse
+from cinema.models import MovieReserve
+from products.models import pish_sabt
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 
 # Create your views here.
@@ -58,7 +62,10 @@ class LoginView(View):
 
             if auth_user:
                 login(request, auth_user)
-                return redirect('profile_page')
+                next_url = request.POST.get('next') or request.GET.get('next')
+
+                return redirect(next_url or 'profile_page')
+                # return redirect('profile_page')
             else:
                 form.add_error(None, 'شماره موبایل یا رمز عبور اشتباه است')
 
@@ -68,9 +75,11 @@ class EditUserProfilePage(View):
     def get(self, request: HttpRequest):
         current_user = user.objects.filter(id=request.user.id).first()
         edit_form = EditProfileModelForm(instance=current_user)
+        reserve = MovieReserve.objects.filter(user=request.user,is_confirmed=True).select_related('movie','show_time')
         context = {
             'form': edit_form,
-            'current_user': current_user
+            'current_user': current_user,
+            'reserve':reserve
         }
         return render(request, 'account/profile.html', context)
 
@@ -92,3 +101,28 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect(reverse('login_page'))
+
+
+class MyReservationsView(LoginRequiredMixin, View):
+    def get(self, request):
+        reserves = MovieReserve.objects.filter(
+            user=request.user,is_confirmed=True
+        ).select_related('movie', 'show_time')
+
+        return render(request, 'account/include/reserv.html', {
+            'reserves': reserves,
+            'current_user': request.user
+
+        })
+
+
+class ClassPishView(LoginRequiredMixin, View):
+    def get(self, request):
+        pish = pish_sabt.objects.filter(
+            user_pish=request.user
+        )
+
+        return render(request, 'account/include/pish.html', {
+            'pish_sabtenam': pish,
+            'current_user': request.user
+        })

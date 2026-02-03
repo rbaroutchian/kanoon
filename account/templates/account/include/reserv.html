@@ -1,0 +1,56 @@
+
+{% extends 'account/profile_base.html' %}
+    {% block profile_title %}
+رزروهای من
+    {% endblock %}
+    {% block profile_content %}
+            <div id="profileTickets" class="profile-tab">
+                <h3 style="color: var(--primary-color); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee;">بلیط‌های رزرو شده</h3>
+
+                <div id="ticketsList">
+                    {% if reserves %}
+                        {% for r in reserves %}
+                            <div class="ticket-card">
+                                <div class="ticket-header">
+                                    <h4>🎬 {{ r.movie.title }}</h4>
+                                    {% if r.is_confirmed %}
+                                        <span class="badge success">تأیید شده</span>
+                                    {% else %}
+                                        <span class="badge warning">در انتظار تأیید</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="ticket-body">
+                                    <div><strong>📅 تاریخ رزرو:</strong> {{ r.created_at|date:"Y/m/d - H:i" }}</div>
+                                    <div><strong>🪑 تعداد بلیط:</strong> {{ r.count }}</div>
+                                    {% if r.show_time %}
+                                        <div><strong>⏰ سانس:</strong> {{ r.show_time }}</div>
+                                    {% endif %}
+                                    <div class="tracking"><strong>🔖 کد رهگیری:</strong> <span>{{ r.tracking_code }}</span></div>
+                                </div>
+
+                                <div class="ticket-footer">
+                                    <a href="{% url 'reserve_receipt' r.tracking_code %}" class="btn btn-outline">🖨 چاپ مجدد بلیط</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div style="background-color: #f8f9fa; padding: 25px; border-radius: var(--border-radius); text-align: center; margin-bottom: 20px;">
+                            <i class="fas fa-film" style="font-size: 3rem; color: #aaa; margin-bottom: 15px;"></i>
+                            <h4 style="color: #666;">هیچ بلیط رزرو شده‌ای ندارید.</h4>
+                            <p style="margin-top: 10px;">
+                                می‌توانید از بخش
+                                <a href="#" onclick="showPage('cinema'); return false;" style="color: var(--accent-color);">
+                                    گیشه بلیط
+                                </a> بلیط سینما رزرو کنید.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+    {% endblock  %}
+
+
+
+

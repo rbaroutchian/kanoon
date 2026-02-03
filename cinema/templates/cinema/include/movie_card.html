@@ -9,6 +9,14 @@
                             <span><i class="fas fa-chair"></i> {{movie.capacity}} </span>
                         </div>
                         <p class="course-description">{{ item.short_desc }}</p>
+                        {% if user.is_authenticated %}
+
                         <a href="{% url 'movie_reserve' movie.id %}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> رزرو بلیط</a>
+                    {% else %}
+                        <a href="{% url 'login_page' %}?next={% url 'movie_reserve' movie.id %}"
+                           class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> ورود برای رزرو
+                        </a>
+                        {% endif %}
                     </div>
                 </div>

@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import CharField
 from django.forms import ChoiceField
 from django.urls import reverse
+from account.models import user
 
 
 
@@ -33,6 +34,8 @@ class pish_sabt(models.Model):
         ('8-10','هشت الی ده سال'),
         ('10-15','ده الی پانزده سال'),
     )
+    user_pish = models.ForeignKey(user,on_delete=models.CASCADE,blank=True
+                                  ,null=True,related_name='relateduser',verbose_name='کاربر')
     product_choice = models.ForeignKey(product,on_delete=models.CASCADE,blank=True
                                        ,null=True,related_name='relatedproduct',verbose_name='کلاس')
     std_name = models.CharField(max_length=300,verbose_name='نام فرزند')

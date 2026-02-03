@@ -13,6 +13,10 @@
 
     <!-- فونت‌های ایرانی و مدرن -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/resid.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reserv.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile_reserv.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile_class.css' %}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
@@ -29,7 +33,7 @@
 {#                    <i class="fas fa-child"></i>#}
                 </div>
                 <div class="logo-text">
-                    <h1>کانون 9 دی</h1>
+                    <h1>کانون برادران</h1>
                     <span>کودکان و نوجوانان</span>
                 </div>
             </a>
@@ -42,8 +46,8 @@
                 <ul class="nav-links" id="navLinks">
                     <li><a href="{% url 'home_page' %}" class="active"><i class="fas fa-home"></i> خانه</a></li>
                     <li><a href="{% url 'product_page' %}"><i class="fas fa-book-open"></i> کلاس‌ها</a></li>
-                    <li><a href="{% url 'movie_list' %}"><i class="fas fa-ticket-alt"></i> گیشه بلیط</a></li>
-                    <li><a href="{% url 'about_page' %}"><i class="fas fa-info-circle"></i> درباره ما</a></li>
+                    <li><a href="{% url 'movie_list' %}"><i class="fas fa-ticket-alt"></i> گیشه سینما</a></li>
+                    <li><a href="{% url 'about_page' %}"><i class="fas fa-info-circle"></i> درباره کانون</a></li>
                 </ul>
             </nav>
 
@@ -53,11 +57,11 @@
 {#                    <i class="fas fa-user-circle"></i>#}
 {#                    <span id="userName">پروفایل</span>#}
 {#                </a>#}
-                  <a href="{% url 'profile_page' %}" class="register-btn" id="registerBtn" onclick="showPage('auth'); showAuthTab('register'); return false;"><i class="fas fa-user-plus"></i> پروفایل</a>   
+                  <a href="{% url 'profile_page' %}" class="register-btn" id="registerBtn" ><i class="fas fa-user"></i> پروفایل</a>
 
                 {% else %}
-                    <a href="{% url 'login_page' %}" class="login-btn" onclick="showPage('auth'); showAuthTab('login'); return false;"><i class="fas fa-sign-in-alt"></i> ورود</a>
-                    <a href="{% url 'register_page' %}" class="register-btn" id="registerBtn" onclick="showPage('auth'); showAuthTab('register'); return false;"><i class="fas fa-user-plus"></i> ثبت‌نام</a>   
+                    <a href="{% url 'login_page' %}" class="login-btn"><i class="fas fa-sign-in-alt"></i> ورود</a>
+                    <a href="{% url 'register_page' %}" class="register-btn" id="registerBtn"><i class="fas fa-user-plus"></i> ثبت‌نام</a>   
                 {% endif %}
                 
             </div>

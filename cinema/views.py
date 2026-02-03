@@ -7,11 +7,6 @@ from django.db import transaction
 from account.models import user
 from django.db.models import Sum
 
-
-
-
-
-
 # Create your views here.
 def movielist(request):
     return render(request,'cinema/movie_list.html')
@@ -23,13 +18,24 @@ class movieListView(ListView):
 
 class MovieReserveView(LoginRequiredMixin, View):
     login_url = 'account/login/'
+    redirect_field_name = 'next'
+
 
     def get(self, request, pk):
         select_movie = get_object_or_404(movie, pk=pk)
-        return render(request, 'cinema/movie_reserve.html', {'movie': select_movie})
+        show = ShowTime.objects.first()
+        return render(request, 'cinema/movie_reserve.html', {'movie': select_movie,
+                                                             'show':show})
 
     def post(self, request, pk):
         select_movie = get_object_or_404(movie, pk=pk)
+
+        if MovieReserve.objects.filter(user=request.user,movie=select_movie).exists():
+            return self._error(
+                request,
+                select_movie,
+                'شما قبلاً برای این فیلم رزرو انجام داده‌اید'
+            )
 
         try:
             count = int(request.POST.get('count'))

@@ -1,0 +1,79 @@
+/* کارت بلیط */
+.ticket-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    border-left: 6px solid #0d6efd;
+
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word; /* مهم برای متن طولانی مثل tracking_code */
+}
+
+/* هدر */
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* ریسپانسیو */
+    margin-bottom: 12px;
+}
+
+/* بادی کارت */
+.ticket-body div {
+    margin-bottom: 6px;
+    font-size: 15px;
+    word-wrap: break-word; /* مهم برای tracking_code */
+}
+
+/* tracking code */
+.tracking span {
+    font-family: monospace;
+    background: #f1f3f5;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    max-width: 100%; /* جلوگیری از overflow */
+    word-break: break-all; /* متن طولانی بدون بیرون زدگی */
+}
+
+/* فوتر */
+.ticket-footer {
+    text-align: left;
+    margin-top: 12px;
+}
+
+/* دکمه چاپ */
+.btn-outline {
+    border: 1px solid #0d6efd;
+    color: #0d6efd;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* حالت چاپ */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .ticket-card, .ticket-card * {
+        visibility: visible;
+    }
+
+    .ticket-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+        border-left: none;
+    }
+
+    .btn-outline {
+        display: none; /* دکمه چاپ تو صفحه چاپ نمیاد */
+    }
+}

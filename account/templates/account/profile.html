@@ -1,46 +1,10 @@
-{% extends 'base.html' %}
-{% load poll_extras %}
 
-{% block page_title %}
-	پروفایل کاربر
-{% endblock %}
-
-{% block page_content %}
-	            <div class="page-container">
-                <h2 class="page-title">پروفایل کاربری</h2>
-
-                <div class="profile-container">
-                    <div class="profile-sidebar">
-                        <div class="profile-avatar">
-                            <div class="avatar-circle">
-                                {% if current_user.avatar.url %}
-                                    <img src="{{ current_user.avatar.url }}"
-                                         alt="{{ current_user.get_full_name }}">
-                                {% else %}
-                                    <i class="fas fa-user"></i>
-                                {% endif %}
-                            </div>
-
-                            <h3 id="profileUserName"> {{ current_user.get_full_name }}</h3>
-                            <p>عضو از:  {{ current_user.date_joined|show_jalali_date }}</p>
-                            <div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.1); border-radius: 8px;">
-                                <p style="font-size: 0.9rem;"><i class="fas fa-ticket-alt"></i> بلیط‌های رزرو شده امروز: <span id="dailyTickets">۲</span> از ۴</p>
-                            </div>
-                        </div>
-
-                        <div class="profile-menu">
-                            <ul>
-                                <li><a href="#" class="active" onclick="showProfileTab('info'); return false;"><i class="fas fa-user-edit"></i> اطلاعات شخصی</a></li>
-                                <li><a href="#" onclick="showProfileTab('registrations'); return false;"><i class="fas fa-list-alt"></i> ثبت‌نام‌های من</a></li>
-                                <li><a href="#" onclick="showProfileTab('tickets'); return false;"><i class="fas fa-ticket-alt"></i> بلیط‌های رزرو شده</a></li>
-{#                                <li><a href="#" onclick="showProfileTab('history'); return false;"><i class="fas fa-history"></i> سوابق فعالیت</a></li>#}
-                                <li><a href="{% url 'logout_page' %}" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج از حساب</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="profile-content">
-                        <div id="profileInfo" class="profile-tab active">
+{% extends 'account/profile_base.html' %}
+    {% block profile_title %}
+    	پروفایل کاربری
+    {% endblock %}
+    {% block profile_content %}
+    	<div id="profileInfo" class="profile-tab active">
                             <h3 style="color: var(--primary-color); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee;">اطلاعات شخصی</h3>
                             <div class="form-container">
                                 <form method="post">
@@ -76,7 +40,7 @@
                             </div>
                         </div>
 
-                        <div id="profileRegistrations" class="profile-tab">
+       <div id="profileRegistrations" class="profile-tab">
                             <h3 style="color: var(--primary-color); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee;">ثبت‌نام‌های من</h3>
                             <div id="registrationsList">
                                 <!-- لیست ثبت‌نام‌ها از بک‌اند لود می‌شود -->
@@ -88,7 +52,7 @@
                             </div>
                         </div>
 
-                        <div id="profileTickets" class="profile-tab">
+       <div id="profileTickets" class="profile-tab">
                             <h3 style="color: var(--primary-color); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee;">بلیط‌های رزرو شده</h3>
                             <div id="ticketsList">
                                 <!-- لیست بلیط‌ها از بک‌اند لود می‌شود -->
@@ -99,21 +63,5 @@
                                 </div>
                             </div>
                         </div>
-
-{#                        <div id="profileHistory" class="profile-tab">#}
-{#                            <h3 style="color: var(--primary-color); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee;">سوابق فعالیت</h3>#}
-{#                            <div id="historyList">#}
-{#                                <!-- سوابق فعالیت از بک‌اند لود می‌شود -->#}
-{#                                <div style="background-color: #f8f9fa; padding: 25px; border-radius: var(--border-radius); text-align: center;">#}
-{#                                    <i class="fas fa-history" style="font-size: 3rem; color: #aaa; margin-bottom: 15px;"></i>#}
-{#                                    <h4 style="color: #666;">هیچ فعالیتی ثبت نشده است.</h4>#}
-{#                                    <p style="margin-top: 10px;">پس از شرکت در کلاس‌ها یا رزرو بلیط، سوابق شما در این بخش نمایش داده می‌شود.</p>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-                    </div>
-                </div>
-            </div>
-
-{% endblock %}
+    {% endblock  %}
 

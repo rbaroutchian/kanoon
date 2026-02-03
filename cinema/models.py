@@ -71,7 +71,8 @@ class movie(models.Model):
 
 class ShowTime(models.Model):
     movie = models.ForeignKey(movie, on_delete=models.CASCADE, related_name='show_times')
-    time = models.DateTimeField(verbose_name='زمان سانس')
+    date = models.DateField(null=True,verbose_name='تاریخ')
+    time = models.TimeField(null=True,verbose_name='زمان سانس')
     capacity = models.PositiveIntegerField(default=50,blank=True,null=True)
 
 

@@ -44,6 +44,7 @@
                             <label for="loginPassword">کلمه عبور:</label>
                             <input type="password" name="password" id="loginPassword" class="form-control" required placeholder="کلمه عبور خود را وارد کنید">
                         </div>
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
 
                         <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> ورود به حساب</button>
 

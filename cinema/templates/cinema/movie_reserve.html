@@ -2,67 +2,65 @@
 {% load static %}
 
 {% block page_title %}
-
+رزرو بلیط
 {% endblock %}
 
 {% block page_content %}
-<div class="page-container">
 
-    <h2 class="page-title">رزرو بلیط</h2>
-    <p>
-        برای رزرو بلیط این فیلم، اطلاعات زیر را بررسی کرده و تعداد بلیط مورد نظر خود را انتخاب کنید.
-    </p>
+<div class="reserve-layout">
 
-    <!-- کارت فیلم -->
-    <div class="course-card" style="margin-bottom: 30px;">
-        <div class="course-image"
-             style="background-image: url('{{ movie.poster.url }}')">
-        </div>
-
-        <div class="course-content">
-            <h3 class="course-title">{{ movie.title }}</h3>
-
-            <div class="course-meta">
-                <span><i class="fas fa-user-graduate"></i> مدرس: {{ movie.teacher }}</span>
-                <span><i class="fas fa-calendar-day"></i> {{ movie.day }}</span>
-                <span><i class="fas fa-chair"></i> ظرفیت باقی‌مانده: {{ movie.capacity }} نفر</span>
+    <!-- ستون چپ: اطلاعات فیلم -->
+    <div class="movie-section">
+        <div class="movie-card">
+            <div class="movie-poster"
+                 style="background-image: url('{{ movie.poster.url }}')">
             </div>
 
-            <p class="course-description">
-                {{ movie.short_desc }}
-            </p>
+            <div class="movie-info">
+                <h2>{{ movie.title }}</h2>
+
+                <div class="movie-meta">
+                    <span><i class="fas fa-clock"></i> سانس:{{ show.time }}</span>
+                    <span><i class="fas fa-calendar-day"></i> {{ movie.day }}</span>
+                    <span><i class="fas fa-chair"></i> ظرفیت باقی‌مانده: {{ movie.capacity }}</span>
+                </div>
+
+                <p class="movie-desc">
+                    {{ movie.short_desc }}
+                </p>
+            </div>
         </div>
     </div>
 
-    <!-- فرم رزرو -->
-    <div class="form-container">
-        <form method="post">
-            {% csrf_token %}
+    <!-- ستون راست: فرم رزرو -->
+    <div class="reserve-section">
+        <div class="reserve-box">
+            <h3>🎫 ثبت رزرو</h3>
 
-            <div class="form-group">
-                <label>تعداد بلیط:</label>
+            <form method="post">
+                {% csrf_token %}
+
+                <label>تعداد بلیط</label>
                 <input type="number"
                        name="count"
-                       class="form-control"
                        min="1"
-
                        max="{{ movie.max_ticket_per_user }}"
+                       class="form-control"
                        required>
-            </div>
 
-            {% if error %}
-                <div class="alert alert-danger">
-                    {{ error|escape  }}
-                </div>
-            {% endif %}
+                {% if error %}
+                    <div class="alert alert-danger mt-3">
+                        {{ error|escape }}
+                    </div>
+                {% endif %}
 
-            <button type="submit" class="btn btn-primary btn-block">
-                <i class="fas fa-ticket-alt"></i>
-                ثبت رزرو
-            </button>
-        </form>
+                <button type="submit" class="reserve-btn">
+                    ثبت رزرو
+                </button>
+            </form>
+        </div>
     </div>
 
 </div>
-{% endblock %}
 
+{% endblock %}

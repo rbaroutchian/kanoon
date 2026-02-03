@@ -1,0 +1,83 @@
+.reserve-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    padding: 30px 40px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* بخش فیلم */
+.movie-card {
+    display: flex;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.06);
+    overflow: hidden;
+}
+
+.movie-poster {
+    width: 300px;
+    background-size: cover;
+    background-position: center;
+}
+
+.movie-info {
+    padding: 25px;
+}
+
+.movie-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    margin: 15px 0;
+    color: #444;
+}
+
+.movie-desc {
+    line-height: 1.9;
+    color: #555;
+}
+
+/* فرم رزرو */
+.reserve-box {
+    position: sticky;
+    top: 100px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.06);
+}
+
+.reserve-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* موبایل */
+@media (max-width: 900px) {
+    .reserve-layout {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    .movie-card {
+        flex-direction: column;
+    }
+
+    .movie-poster {
+        width: 100%;
+        height: 380px;
+    }
+
+    .reserve-box {
+        position: static;
+    }
+}
