@@ -1366,3 +1366,43 @@
     }
 }
 
+/* موبایل */
+@media (max-width: 768px) {
+
+    nav {
+        position: relative;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #fff;
+        width: 100%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        z-index: 999;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        border-bottom: 1px solid #eee;
+    }
+
+    .nav-links li a {
+        padding: 15px;
+        display: block;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+    }
+}
